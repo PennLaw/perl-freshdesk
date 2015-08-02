@@ -12,7 +12,7 @@ This is very much a work-in-progress. Pull requests welcomed.
 use Freshdesk::Host;
 use Freshdesk::Ticket;
 ...
-my$host = new Freshdesk::Host($domain, $api_key);
+my $host = new Freshdesk::Host($domain, $api_key);
 my $ticket = new Freshdesk::Ticket($host, $ticket_number);
 $ticket->add_note($note);
 $ticket->resolve;
