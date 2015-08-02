@@ -59,7 +59,7 @@ sub resolve {
 
 sub die_unless_valid_ticket {
     my $self = shift;
-    die "This ticket ($self->{id}) has not been initialized.\n" unless $self->    is_valid_ticket;
+    die "This ticket ($self->{id}) has not been initialized.\n" unless $self->is_valid_ticket;
 }
 
 # Valid ticket IDs should be positive integers
