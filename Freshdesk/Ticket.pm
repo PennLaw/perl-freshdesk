@@ -29,6 +29,8 @@ sub add_note {
 
     $self->die_unless_valid_ticket;
 
+    $note =~ s/\n/\\n/g; # escape newlines, which break JSON
+
     my $api_endpoint = "/helpdesk/tickets/$self->{id}/conversations/note.json";
     my $uri = $self->{host}->get_uri($api_endpoint);
     my $request = HTTP::Request->new(POST => $uri);
