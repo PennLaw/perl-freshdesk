@@ -6,6 +6,7 @@ use parent 'Exporter';
 our @EXPORT_OK = qw/add_note resolve/;
 use HTTP::Request;
 use LWP::UserAgent;
+use JSON;
 
 sub new {
     my $class = shift;
@@ -29,15 +30,21 @@ sub add_note {
 
     $self->die_unless_valid_ticket;
 
-    $note =~ s/\n/\\n/g; # escape newlines, which break JSON
+    # create hash that matches JSON structure
+    # See: https://support.zendesk.com/hc/en-us/articles/203691306-Zendesk-REST-API-tutorial-Perl-edition
+    my %data = (
+        helpdesk_note => {
+            body => $note,
+            private => 'true',
+        },
+    );
 
     my $api_endpoint = "/helpdesk/tickets/$self->{id}/conversations/note.json";
     my $uri = $self->{host}->get_uri($api_endpoint);
     my $request = HTTP::Request->new(POST => $uri);
     $request->header('content-type' => 'application/json');
     $request->authorization_basic($self->{host}->{apikey}, 'dummypassword');
-    my $content = qq{{"helpdesk_note": {"body":"$note", "private":true}}};
-    $request->content($content);
+    $request->content(encode_json(\%data));
     my $ua = LWP::UserAgent->new;
     my $response = $ua->request($request);
     #print $response->content;
